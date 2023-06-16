@@ -20,24 +20,24 @@ public class JogoController {
 
     @RequestMapping("/list")
     public String list(Model model) {
-        model.addAttribute("produtos", JogoRepo.findAll());
+        model.addAttribute("jogos", jogoRepo.findAll());
         return "/jogo/list";
     }
 
     @RequestMapping("/insert")
     public String insert() {
-        return "/produto/insert";
+        return "/jogo/insert";
     }
 
     @RequestMapping(value = "/insert", method = RequestMethod.POST)
     public String insert(
         @RequestParam("titulo") String titulo,
         @RequestParam("anoDeLancamento") String anoDeLancamento ) {
-        application.controller.model.Jogo jogo = new jogo();
+        application.model.Jogo jogo = new Jogo();
         jogo.setTitulo(titulo);
         jogo.setAnoDeLancamento(anoDeLancamento);
 
-        JogoRepo.save(jogo);
+        jogoRepo.save(jogo);
         return "redirect:/jogo/list";
     }
 
@@ -57,22 +57,22 @@ public class JogoController {
     public String update(
         @RequestParam("id") int id,
         @RequestParam("titulo") String titulo,
-        @RequestParam("anoDeLancamento") String descricao) {
+        @RequestParam("anoDeLancamento") String anoDeLancamento) {
         
-        Optional<Jogo> produto = JogoRepo.findById(id);
+        Optional<Jogo> jogo = jogoRepo.findById(id);
 
         if(jogo.isPresent()) {
             jogo.get().setTitulo(titulo);
-            jogo.get().setDescricao(descricao);
+            jogo.get().setAnoDeLancamento(anoDeLancamento);
 
-            JogoRepo.save(jogo.get());
+            jogoRepo.save(jogo.get());
         }     
         return "redirect:/jogo/list";
     }
 
     @RequestMapping("/delete")
     public String delete(Model model, @RequestParam("id") int id) {
-        Optional<Jogo> produto = jogoRepo.findById(id);
+        Optional<Jogo> jogo = jogoRepo.findById(id);
 
         if(jogo.isPresent()) {
             model.addAttribute("jogo", jogo.get());
@@ -84,7 +84,7 @@ public class JogoController {
 
     @RequestMapping(value = "/delete", method = RequestMethod.POST)
     public String delete(@RequestParam("id") int id) {
-        JogoRepo.deleteById(id);
+        jogoRepo.deleteById(id);
         
         return "redirect:/jogo/list";
     }
